@@ -12,8 +12,8 @@ namespace juultimesedler_be.Controllers
             _contentService = contentService;
         }
 
-        [HttpGet("api/test")]
-        public IActionResult Index()
+        [HttpPost("api/test")]
+        public IActionResult Index([FromBody] object data)
         {
             var bp = "";
             var rootNode = _contentService.GetById(1057);
