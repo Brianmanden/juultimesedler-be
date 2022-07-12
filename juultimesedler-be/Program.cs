@@ -20,6 +20,7 @@ namespace juultimesedler_be
                 });
     }
 
+    #region CORS
     public class MyComposer : IComposer
     {
         public void Compose(IUmbracoBuilder builder)
@@ -42,4 +43,5 @@ namespace juultimesedler_be
             });
         }
     }
+    #endregion
 }
