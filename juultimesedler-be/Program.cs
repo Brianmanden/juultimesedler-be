@@ -1,3 +1,6 @@
+using Umbraco.Cms.Core.Composing;
+using Umbraco.Cms.Web.Common.ApplicationBuilder;
+
 namespace juultimesedler_be
 {
     public class Program
@@ -15,5 +18,28 @@ namespace juultimesedler_be
                     webBuilder.UseStaticWebAssets();
                     webBuilder.UseStartup<Startup>();
                 });
+    }
+
+    public class MyComposer : IComposer
+    {
+        public void Compose(IUmbracoBuilder builder)
+        {
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    x =>    x.AllowAnyOrigin()
+                             .AllowAnyHeader()
+                             .AllowAnyMethod()
+                );
+            });
+
+            builder.Services.Configure<UmbracoPipelineOptions>(options =>
+            {
+                options.AddFilter(new UmbracoPipelineFilter(nameof(MyComposer))
+                {
+                    PostPipeline = appBuilder => appBuilder.UseCors()
+                });
+            });
+        }
     }
 }
