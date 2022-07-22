@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using juultimesedler_be.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using Umbraco.Cms.Core.Services;
 
 namespace juultimesedler_be.Controllers
@@ -14,18 +16,23 @@ namespace juultimesedler_be.Controllers
 
         [HttpPost("api/test")]
         //public IActionResult Index([FromBody] object data)
-        public object Index([FromBody] object data)
+        public object Index([FromBody] TimeSheetDTO data)
         {
             var bp = "";
-            var rootNode = _contentService.GetById(1057);
-            var newItem = _contentService.CreateAndSave("testCreate" + DateTime.Now.ToShortTimeString(), rootNode.Id, "testDocType", -1);
 
-            object returnObj = new { 
-                theId = newItem.Id,
-                thing = newItem.Name,
-            };
+            DateTime dt = DateTime.Now;
+            Calendar cal = new CultureInfo("da-DK").Calendar;
+            int week = cal.GetWeekOfYear(dt, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            Console.WriteLine(week);
 
-            return returnObj;
+            //var rootNode = _contentService.GetById(1057);
+            var rootNode = _contentService.GetById(1089);
+
+            var newItem = _contentService.Create(data.SelectedProjectAdvanced + "-Uge" + week + "-Svedsken", rootNode.Id, "testDocType", -1);
+            newItem.SetValue("testTextString", data.SelectedProjectAdvanced);
+            _contentService.Save(newItem);
+
+            return newItem;
         }
     }
 }
