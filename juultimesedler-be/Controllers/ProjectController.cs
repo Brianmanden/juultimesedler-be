@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+﻿using juultimesedler_be.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core.Services;
 
 namespace juultimesedler_be.Controllers
@@ -14,30 +14,32 @@ namespace juultimesedler_be.Controllers
         }
 
         [HttpGet("api/projects/{workerId}")]
-        public List<int> GetProjectsByWorkerId(int workerId)
+        public List<GetProjectDTO> GetProjectsByWorkerId(int workerId)
         {
-            // TODO: Create return DTO containing only needed information for FE
-            List<int> assignedProjects = new();
+            List<GetProjectDTO> assignedProjects = new();
             var projectsNode = _contentService.GetRootContent().Where(node => node.ContentType.Alias == "projects");
-            var workerKey = _contentService.GetById(workerId).Key.ToString().Replace("-", "");
+            var workerKey = _contentService.GetById(workerId)?.Key.ToString().Replace("-", "");
 
             long totalProjects;
             var projects = _contentService.GetPagedChildren(projectsNode.FirstOrDefault().Id, 0, 1000, out totalProjects);
 
             foreach (var project in projects)
             {
-                foreach (var property in project.Properties.Where(prop => prop.Alias == "workers"))
+                string[]? workers = project.GetValue("workers")?.ToString().Split(',');
+
+                if (workers != null && workers.Any(worker => worker.Contains(workerKey)))
                 {
-                    string[] userIds = property.Values.FirstOrDefault().PublishedValue.ToString().Split(",");
-                    foreach (var userId in userIds)
+                    string projectFullName = project.GetValue("fullName")?.ToString() ?? "No full name for project!";
+                    assignedProjects.Add(new GetProjectDTO
                     {
-                        if (userId.Contains(workerKey))
-                        {
-                            assignedProjects.Add(project.Id);
-                        }
-                    }
+                        ProjectId = project.Id,
+                        ProjectName = project.Name,
+                        ProjectFullName = projectFullName,
+                    });
                 }
             }
+
+            //var returnProjects = assignedProjects.Where(ap => projectsNode.Any(pn => pn.Id == ap));
 
             return assignedProjects;
         }
