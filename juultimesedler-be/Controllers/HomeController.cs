@@ -28,8 +28,8 @@ namespace juultimesedler_be.Controllers
             //var rootNode = _contentService.GetById(1057);
             var rootNode = _contentService.GetById(1089);
 
-            var newItem = _contentService.Create(data.SelectedProjectAdvanced + "-Uge" + week + "-Svedsken", rootNode.Id, "testDocType", -1);
-            newItem.SetValue("testTextString", data.SelectedProjectAdvanced);
+            var newItem = _contentService.Create(data.SelectedProjectId + "-Uge" + week + "-Svedsken", rootNode.Id, "testDocType", -1);
+            newItem.SetValue("testTextString", data.SelectedProjectId);
             _contentService.Save(newItem);
 
             return newItem;

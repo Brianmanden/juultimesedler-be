@@ -29,7 +29,18 @@ namespace juultimesedler_be
         /// </remarks>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddUmbraco(_env, _config)
+            services
+                .AddCors(options =>
+                    options.AddPolicy(
+                        "AllowDashboardOrigin",
+                        builder => builder
+                                    .SetIsOriginAllowed((host) => true)
+                                    .AllowAnyOrigin()
+                                    .AllowAnyMethod()
+                                    .AllowAnyHeader()
+                    )
+                )
+                .AddUmbraco(_env, _config)
                 .AddBackOffice()
                 .AddWebsite()
                 .AddComposers()
@@ -48,7 +59,10 @@ namespace juultimesedler_be
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseUmbraco()
+            app
+                //.UseCors("MyCors")
+                .UseCors("AllowDashboardOrigin")
+                .UseUmbraco()
                 .WithMiddleware(u =>
                 {
                     u.UseBackOffice();

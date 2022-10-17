@@ -1,4 +1,5 @@
 ﻿using juultimesedler_be.DTOs;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core.Services;
 
@@ -43,5 +44,23 @@ namespace juultimesedler_be.Controllers
 
             return assignedProjects;
         }
+
+        [EnableCors("AllowDashboardOrigin")]
+        [HttpPost("api/projects")]
+        public ActionResult UpdateTimeSheet(TimeSheetDTO data)
+        {
+            var bp = "";
+
+            return Ok();
+        }
+
+        //[EnableCors("AllowDashboardOrigin")]
+        //[HttpPost("api/projects")]
+        //public ActionResult UpdateTimeSheet(string data)
+        //{
+        //    var bp = "";
+
+        //    return Ok();
+        //}
     }
 }

@@ -15,6 +15,19 @@ namespace juultimesedler_be
                 .ConfigureUmbracoDefaults()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureServices(
+                        services => services.AddCors(
+                            options => options.AddPolicy(
+                                "MyCors", policy =>
+                                    {
+                                        policy
+                                        .AllowAnyOrigin()
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                                    }
+                            )
+                        )
+                    );
                     webBuilder.UseStaticWebAssets();
                     webBuilder.UseStartup<Startup>();
                 });
