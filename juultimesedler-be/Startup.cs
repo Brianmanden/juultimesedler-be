@@ -1,3 +1,6 @@
+using juultimesedler_be.Events;
+using Umbraco.Cms.Core.Notifications;
+
 namespace juultimesedler_be
 {
     public class Startup
@@ -44,6 +47,7 @@ namespace juultimesedler_be
                 .AddBackOffice()
                 .AddWebsite()
                 .AddComposers()
+                .AddNotificationHandler<UmbracoApplicationStartingNotification, ApplicationStartingNotificationHandler>()
                 .Build();
         }
 

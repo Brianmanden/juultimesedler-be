@@ -8,18 +8,21 @@ namespace juultimesedler_be.Controllers
     public class ProjectController : Controller
     {
         private IContentService _contentService;
+        private IUserService _userService;
 
-        public ProjectController(IContentService contentService)
+        public ProjectController(IContentService contentService, IUserService userService)
         {
             _contentService = contentService;
+            _userService = userService;
         }
 
         [HttpGet("api/projects/{workerId}")]
         public List<GetProjectDTO> GetProjectsByWorkerId(int workerId)
         {
             List<GetProjectDTO> assignedProjects = new();
-            var projectsNode = _contentService.GetRootContent().Where(node => node.ContentType.Alias == "projects");
-            var workerKey = _contentService.GetById(workerId)?.Key.ToString().Replace("-", "");
+            var projectsNode = _contentService.GetRootContent().Where(node => node.ContentType.Name == "TimeSheetsFolder");
+
+            var workerKey = _userService.GetUserById(workerId)?.Key.ToString().Replace("-", "");
 
             long totalProjects;
             var projects = _contentService.GetPagedChildren(projectsNode.FirstOrDefault().Id, 0, 1000, out totalProjects);
