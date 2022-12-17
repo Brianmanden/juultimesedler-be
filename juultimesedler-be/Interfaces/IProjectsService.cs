@@ -2,8 +2,10 @@
 
 namespace juultimesedler_be.Interfaces
 {
-    public interface ProjectsInterface
+    public interface IProjectsService
     {
         public IEnumerable<IContent> GetProjects();
+
+        public IEnumerable<IContent> GetProjectsByWorkerId(int workerId);
     }
 }

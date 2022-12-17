@@ -4,7 +4,7 @@ using Umbraco.Cms.Core.Services;
 
 namespace juultimesedler_be.Services
 {
-    public class ProjectsService : ProjectsInterface
+    public class ProjectsService : IProjectsService
     {
         private IContentService _contentService;
 
@@ -14,7 +14,19 @@ namespace juultimesedler_be.Services
         }
 
         public IEnumerable<IContent> GetProjects() {
-            return _contentService.GetRootContent().Where(node => node.ContentType.Name == "ProjectsFolder");
+            var projects = 
+                _contentService
+                    .GetRootContent()
+                    .Where(node => node.ContentType.Alias == "projects");
+
+            return projects;
+        }
+
+        // TODO
+        public IEnumerable<IContent> GetProjectsByWorkerId(int workerId) {
+            var workerProjects = this.GetProjects().Where(project => project.ContentType.Alias == "thing");
+
+            return workerProjects;
         }
     }
 }
