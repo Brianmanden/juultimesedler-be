@@ -24,8 +24,8 @@ namespace juultimesedler_be.Events
             IUserGroup workerGroup = _userService.GetUserGroupByAlias("workers");
             var allWorkers =_userService.GetAllInGroup(workerGroup.Id);
 
-            // HERTIL BJA
-            // Sætte users på som værdier på workerslist
+            // TODO
+            // Add workers to list
             var workerList = _dataTypeService
                                 .GetAll()
                                 .Where(editor => editor.Name == "TimeSheet - Worker List");
