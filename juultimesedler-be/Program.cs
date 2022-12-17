@@ -1,3 +1,4 @@
+using juultimesedler_be.Services;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Web.Common.ApplicationBuilder;
 
@@ -12,6 +13,9 @@ namespace juultimesedler_be
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureServices((_, services) => {
+                    services.AddScoped<IProjectsService, ProjectsService>();
+                })
                 .ConfigureUmbracoDefaults()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

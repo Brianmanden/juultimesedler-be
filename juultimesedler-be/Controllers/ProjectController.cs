@@ -1,4 +1,5 @@
 ﻿using juultimesedler_be.DTOs;
+using juultimesedler_be.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core.Services;
@@ -9,8 +10,9 @@ namespace juultimesedler_be.Controllers
     {
         private IContentService _contentService;
         private IUserService _userService;
+        private ProjectsService _projectsService;
 
-        public ProjectController(IContentService contentService, IUserService userService)
+        public ProjectController(IContentService contentService, IUserService userService, ProjectsService projectsService)
         {
             _contentService = contentService;
             _userService = userService;
@@ -20,12 +22,12 @@ namespace juultimesedler_be.Controllers
         public List<GetProjectDTO> GetProjectsByWorkerId(int workerId)
         {
             List<GetProjectDTO> assignedProjects = new();
-            var projectsNode = _contentService.GetRootContent().Where(node => node.ContentType.Name == "TimeSheetsFolder");
+            var projects = _projectsService.GetProjects();
 
             var workerKey = _userService.GetUserById(workerId)?.Key.ToString().Replace("-", "");
 
             long totalProjects;
-            var projects = _contentService.GetPagedChildren(projectsNode.FirstOrDefault().Id, 0, 1000, out totalProjects);
+            var projects = _contentService.GetPagedChildren(projects.FirstOrDefault().Id, 0, 1000, out totalProjects);
 
             foreach (var project in projects)
             {
