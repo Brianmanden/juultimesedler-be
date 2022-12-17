@@ -1,4 +1,5 @@
 ﻿using juultimesedler_be.Interfaces;
+using NPoco;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
 
@@ -14,19 +15,28 @@ namespace juultimesedler_be.Services
         }
 
         public IEnumerable<IContent> GetProjects() {
-            var projects = 
+            int projectsFolderId = 
                 _contentService
                     .GetRootContent()
-                    .Where(node => node.ContentType.Alias == "projects");
+                    .Where(node => node.ContentType.Alias == "projects")
+                    .FirstOrDefault()
+                    .Id;
+
+            long totalProjects;
+            IEnumerable<IContent> projects =
+                _contentService
+                    .GetPagedDescendants(projectsFolderId, 0, 1000, out totalProjects)
+                    .Where(node => node.ContentType.Alias == "project");
 
             return projects;
         }
 
         // TODO
         public IEnumerable<IContent> GetProjectsByWorkerId(int workerId) {
-            var workerProjects = this.GetProjects().Where(project => project.ContentType.Alias == "thing");
+            var projectsAssignedToWorker =
+                GetProjects();
 
-            return workerProjects;
+            return projectsAssignedToWorker;
         }
     }
 }

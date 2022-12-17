@@ -25,6 +25,7 @@ namespace juultimesedler_be.Controllers
         {
             List<GetProjectDTO> assignedProjects = new();
             var projects = _projectsService.GetProjects();
+            var workersProjects = _projectsService.GetProjectsByWorkerId(1106);
 
             var workerKey = _userService.GetUserById(workerId)?.Key.ToString().Replace("-", "");
 
