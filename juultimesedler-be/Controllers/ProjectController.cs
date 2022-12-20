@@ -12,66 +12,34 @@ namespace juultimesedler_be.Controllers
         private IContentService _contentService;
         private IUserService _userService;
         private IProjectsService _projectsService;
+        private IWorkersService _workersService;
 
-        public ProjectController(IContentService contentService, IUserService userService, IProjectsService projectsService)
+        public ProjectController(IContentService contentService, IUserService userService, IProjectsService projectsService, IWorkersService workersService)
         {
             _contentService = contentService;
             _userService = userService;
             _projectsService = projectsService;
+            _workersService = workersService;
         }
 
         [HttpGet("api/projects/{workerId}")]
         public List<GetProjectDTO> GetProjectsByWorkerId(int workerId)
         {
             List<GetProjectDTO> assignedProjects = new();
-            var projects = _projectsService.GetProjects();
+            var workersProjects = _projectsService.GetProjectsByWorkerId(workerId);
 
-            // TODO
-            var workersProjects = _projectsService.GetProjectsByWorkerId(1106);
-
-            var workerKey = _userService.GetUserById(workerId)?.Key.ToString().Replace("-", "");
-
-            long totalProjects;
-
-            //var projects = _contentService.GetPagedChildren(projects.FirstOrDefault().Id, 0, 1000, out totalProjects);
-
-            //foreach (var project in projects)
-            //{
-            //    string[]? workers = project.GetValue("workers")?.ToString().Split(',');
-
-            //    if (workers != null && workers.Any(worker => worker.Contains(workerKey)))
-            //    {
-            //        string projectFullName = project.GetValue("fullName")?.ToString() ?? "No full name for project!";
-            //        assignedProjects.Add(new GetProjectDTO
-            //        {
-            //            ProjectId = project.Id,
-            //            ProjectName = project.Name,
-            //            ProjectFullName = projectFullName,
-            //        });
-            //    }
-            //}
-
-            ////var returnProjects = assignedProjects.Where(ap => projectsNode.Any(pn => pn.Id == ap));
+            foreach (var project in workersProjects)
+            {
+                // TODO Set project fullname
+                assignedProjects.Add(new GetProjectDTO
+                {
+                    ProjectId = project.Id,
+                    ProjectName = project.Name,
+                    ProjectFullName = "project Fullname TODO" + project.Name,
+                });
+            }
 
             return assignedProjects;
-        }
-
-        //[EnableCors("AllowDashboardOrigin")]
-        //[HttpPost("api/projects")]
-        //public ActionResult UpdateTimeSheet(TimeSheetDTO data)
-        //{
-        //    var bp = "";
-
-        //    return Ok();
-        //}
-
-        [EnableCors("AllowDashboardOrigin")]
-        [HttpPost("api/projects")]
-        public ActionResult UpdateTimeSheet(string data)
-        {
-            var bp = "";
-
-            return Ok();
         }
     }
 }
