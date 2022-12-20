@@ -3,6 +3,7 @@ using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Web.Common.ApplicationBuilder;
 using juultimesedler_be.Interfaces;
 using juultimesedler_be.Services;
+using Umbraco.Cms.Core.Services;
 
 namespace juultimesedler_be
 {
@@ -18,6 +19,7 @@ namespace juultimesedler_be
                 .ConfigureServices(
                     services =>
                         services.AddScoped<IProjectsService, ProjectsService>()
+                                .AddScoped<IWorkersService, WorkersService>()
                     )
                 .ConfigureUmbracoDefaults()
                 .ConfigureWebHostDefaults(webBuilder =>

@@ -24,8 +24,7 @@ namespace juultimesedler_be.Events
             IUserGroup workerGroup = _userService.GetUserGroupByAlias("workers");
             var allWorkers =_userService.GetAllInGroup(workerGroup.Id);
 
-            // TODO
-            // Add workers to list
+            // TODO Add workers to node with list of workers. What to do when new user is added - restart application ?
             var workerList = _dataTypeService
                                 .GetAll()
                                 .Where(editor => editor.Name == "TimeSheet - Worker List");

@@ -6,6 +6,6 @@ namespace juultimesedler_be.Interfaces
     {
         public IEnumerable<IContent> GetProjects();
 
-        public IEnumerable<IContent> GetProjectsByWorkerId(int workerId);
+        public IList<IContent> GetProjectsByWorkerId(int workerId);
     }
 }
