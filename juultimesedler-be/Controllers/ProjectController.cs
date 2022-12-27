@@ -41,5 +41,13 @@ namespace juultimesedler_be.Controllers
 
             return assignedProjects;
         }
+
+        [HttpPost("api/projects")]
+        public TimeSheetDTO UpsertProject([FromBody]TimeSheetDTO project)
+        {
+            var bp = "";
+
+            return project;
+        }
     }
 }
