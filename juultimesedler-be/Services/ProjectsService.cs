@@ -36,6 +36,15 @@ namespace juultimesedler_be.Services
             return projects;
         }
 
+        public IEnumerable<IContent> GetCurrentProjects() { 
+            IEnumerable<IContent> allProjects = GetProjects();
+
+            // TODO Filter on current projects
+            IEnumerable<IContent> currentProjects = allProjects;
+
+            return currentProjects;
+        }
+
         public IList<IContent> GetProjectsByWorkerId(int workerId)
         {
             IEnumerable<IContent> allProjects = GetProjects();
