@@ -3,6 +3,7 @@ using juultimesedler_be.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Web.Common;
 
 namespace juultimesedler_be.Controllers
@@ -10,10 +11,12 @@ namespace juultimesedler_be.Controllers
     public class ProjectController : Controller
     {
         private readonly UmbracoHelper _umbracoHelper;
+        private IContentService _contentService;
 
-        public ProjectController(UmbracoHelper umbracoHelper)
+        public ProjectController(UmbracoHelper umbracoHelper, IContentService contentService)
         {
             _umbracoHelper = umbracoHelper;
+            _contentService = contentService;
         }
 
         [HttpGet("api/projects/")]
@@ -40,8 +43,15 @@ namespace juultimesedler_be.Controllers
         [HttpPost("api/projects")]
         public TimeSheetDTO UpsertProject([FromBody]TimeSheetDTO project)
         {
+            // HERTIL BJA
             // TODO UpsertProject
             var bp = "";
+
+            var currentProject = _contentService.GetById(project.SelectedProjectId);
+            currentProject.SetValue("fullName", "new fullname value");
+            currentProject.SetValue("address", "new address value");
+
+            _contentService.SaveAndPublish(currentProject);
 
             return project;
         }
