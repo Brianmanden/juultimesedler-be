@@ -1,56 +1,40 @@
 ﻿using juultimesedler_be.DTOs;
 using juultimesedler_be.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Web.Common;
 
 namespace juultimesedler_be.Controllers
 {
     public class ProjectController : Controller
     {
-        private IProjectsService _projectsService;
+        private readonly UmbracoHelper _umbracoHelper;
 
-        public ProjectController(IProjectsService projectsService)
+        public ProjectController(UmbracoHelper umbracoHelper)
         {
-            _projectsService = projectsService;
+            _umbracoHelper = umbracoHelper;
         }
 
         [HttpGet("api/projects/")]
         public List<GetProjectDTO> GetCurrentProjects()
         {
+            IPublishedContent rootNode = _umbracoHelper.ContentAtRoot().FirstOrDefault();
+            IEnumerable<IPublishedContent> projects = rootNode.Children().ToList();
             List<GetProjectDTO> allProjectsList = new();
-            var allProjects = _projectsService.GetCurrentProjects();
 
-            foreach (var project in allProjects)
+            foreach (var project in projects)
             {
-                // TODO Set project fullname
                 allProjectsList.Add(new GetProjectDTO
                 {
+                    //someProperty = project.Value("contactPerson / address / description / contactPerson")?.ToString()
                     ProjectId = project.Id,
                     ProjectName = project.Name,
-                    ProjectFullName = "project Fullname TODO" + project.Name,
+                    ProjectFullName = project.Value("fullName")?.ToString(),
                 });
             }
 
             return allProjectsList;
-        }
-
-        [HttpGet("api/projects/{workerId}")]
-        public List<GetProjectDTO> GetProjectsByWorkerId(int workerId)
-        {
-            List<GetProjectDTO> assignedProjects = new();
-            var workersProjects = _projectsService.GetProjectsByWorkerId(workerId);
-
-            foreach (var project in workersProjects)
-            {
-                // TODO Set project fullname
-                assignedProjects.Add(new GetProjectDTO
-                {
-                    ProjectId = project.Id,
-                    ProjectName = project.Name,
-                    ProjectFullName = "project Fullname TODO" + project.Name,
-                });
-            }
-
-            return assignedProjects;
         }
 
         [HttpPost("api/projects")]
