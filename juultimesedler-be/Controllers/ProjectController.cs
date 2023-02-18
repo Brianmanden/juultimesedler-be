@@ -10,22 +10,18 @@ namespace juultimesedler_be.Controllers
     public class ProjectController : Controller
     {
         private readonly UmbracoHelper _umbracoHelper;
-        private IContentService _contentService;
 
-        public ProjectController(UmbracoHelper umbracoHelper, IContentService contentService)
+        public ProjectController(UmbracoHelper umbracoHelper)
         {
             _umbracoHelper = umbracoHelper;
-            _contentService = contentService;
         }
-
+            
         [HttpGet("api/projects/")]
         public List<GetProjectDTO> GetCurrentProjects()
         {
-            TimeService timeService = new TimeService();
-            string formattedYearAndWeek = timeService.FormattedCurrentYearAndWeek();
-
             IPublishedContent rootNode = _umbracoHelper.ContentAtRoot().FirstOrDefault();
-            IEnumerable<IPublishedContent> projects = rootNode.Children().ToList();
+            IEnumerable<IPublishedContent> projects = rootNode.Children().DescendantsOrSelfOfType("project").ToList();
+
             List<GetProjectDTO> allProjectsList = new();
 
             foreach (var project in projects)
@@ -40,21 +36,6 @@ namespace juultimesedler_be.Controllers
             }
 
             return allProjectsList;
-        }
-
-        [HttpPost("api/projects")]
-        public TimeSheetDTO UpsertProject([FromBody]TimeSheetDTO project)
-        {
-            TimeService timeService = new TimeService();
-            string formattedYearAndWeek = timeService.FormattedCurrentYearAndWeek();
-
-            var currentProject = _contentService.GetById(project.SelectedProjectId);
-            //currentProject.SetValue("fullName", "new fullname value");
-            currentProject.SetValue("fullName", formattedYearAndWeek + " - new fullname value");
-            currentProject.SetValue("address", "new address value");
-
-            _contentService.SaveAndPublish(currentProject);
-            return project;
         }
     }
 }
