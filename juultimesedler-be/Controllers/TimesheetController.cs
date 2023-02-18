@@ -14,7 +14,7 @@ namespace juultimesedler_be.Controllers
             _contentService = contentService;
         }
 
-        [HttpPost("api/timesheets")]
+        [HttpPut("api/timesheets")]
         public TimeSheetDTO UpsertTimesheet([FromBody] TimeSheetDTO timesheet)
         {
             TimeService timeService = new TimeService();
