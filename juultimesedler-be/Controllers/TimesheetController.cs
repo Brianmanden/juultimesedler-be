@@ -1,4 +1,5 @@
 ﻿using juultimesedler_be.DTOs;
+//using juultimesedler_be.Models;
 using juultimesedler_be.Services;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core.Services;
@@ -14,19 +15,29 @@ namespace juultimesedler_be.Controllers
             _contentService = contentService;
         }
 
-        [HttpPut("api/timesheets")]
-        public TimeSheetDTO UpsertTimesheet([FromBody] TimeSheetDTO timesheet)
+        [HttpGet("api/gettimesheetweek")]
+        public GetTimesheetWeekDTO GetCurrentTimesheetWeek()
         {
-            TimeService timeService = new TimeService();
+            TimeService timeService = new();
+            GetTimesheetWeekDTO timesheetWeek = timeService.GetCurrentTimesheetWeek();
+            return timesheetWeek;
+        }
+
+        [HttpPut("api/timesheets")]
+        public PutTimeSheetDTO UpsertTimesheet([FromBody] PutTimeSheetDTO weekTimesheet)
+        {
+            TimeService timeService = new();
             string formattedYearAndWeek = timeService.FormattedCurrentYearAndWeek();
 
-            var currentProject = _contentService.GetById(timesheet.SelectedProjectId);
-            //currentProject.SetValue("fullName", "new fullname value");
-            currentProject.SetValue("fullName", formattedYearAndWeek + " - new fullname value");
-            currentProject.SetValue("address", "new address value");
+            // TODO BJA - Check for workdays, maybe refactor into service ?
+ 
+            //var currentProject = _contentService.GetById(timesheet.SelectedProjectId);
+            ////currentProject.SetValue("fullName", "new fullname value");
+            //currentProject.SetValue("fullName", formattedYearAndWeek + " - new fullname value");
+            //currentProject.SetValue("address", "new address value");
 
-            _contentService.SaveAndPublish(currentProject);
-            return timesheet;
+            //_contentService.SaveAndPublish(currentProject);
+            return weekTimesheet;
         }
     }
 }
