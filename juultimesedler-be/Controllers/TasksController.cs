@@ -18,7 +18,7 @@ namespace juultimesedler_be.Controllers
         }
 
         [HttpGet("api/tasks/")]
-        public List<TasksGroupDTO> GetAllTasks()
+        public async Task<List<TasksGroupDTO>> GetAllTasks()
         {
             List<TasksGroupDTO> groupedTasks = new List<TasksGroupDTO>();
 

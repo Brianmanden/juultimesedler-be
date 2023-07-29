@@ -16,21 +16,22 @@ namespace juultimesedler_be.Controllers
         }
 
         [HttpGet("api/gettimesheetweek")]
-        public GetTimesheetWeekDTO GetCurrentTimesheetWeek()
+        public async Task<GetTimesheetWeekDTO> GetCurrentTimesheetWeek()
         {
             TimeService timeService = new();
             GetTimesheetWeekDTO timesheetWeek = timeService.GetCurrentTimesheetWeek();
+            
             return timesheetWeek;
         }
 
         [HttpPut("api/timesheets")]
-        public PutTimeSheetDTO UpsertTimesheet([FromBody] PutTimeSheetDTO weekTimesheet)
+        public async Task<PutTimeSheetDTO> UpsertTimesheet([FromBody] PutTimeSheetDTO weekTimesheet)
         {
             TimeService timeService = new();
             string formattedYearAndWeek = timeService.FormattedCurrentYearAndWeek();
 
             // TODO BJA - Check for workdays, maybe refactor into service ?
- 
+
             //var currentProject = _contentService.GetById(timesheet.SelectedProjectId);
             ////currentProject.SetValue("fullName", "new fullname value");
             //currentProject.SetValue("fullName", formattedYearAndWeek + " - new fullname value");

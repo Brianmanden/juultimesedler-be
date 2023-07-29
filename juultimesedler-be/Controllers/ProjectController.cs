@@ -1,8 +1,6 @@
 ﻿using juultimesedler_be.DTOs;
-using juultimesedler_be.Services;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core.Models.PublishedContent;
-using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Web.Common;
 
 namespace juultimesedler_be.Controllers
@@ -17,7 +15,7 @@ namespace juultimesedler_be.Controllers
         }
             
         [HttpGet("api/projects/")]
-        public List<GetProjectDTO> GetCurrentProjects()
+        public async Task<List<GetProjectDTO>> GetCurrentProjects()
         {
             IPublishedContent rootNode = _umbracoHelper.ContentAtRoot().FirstOrDefault();
             IEnumerable<IPublishedContent> projects = rootNode.Children().DescendantsOrSelfOfType("project").ToList();
