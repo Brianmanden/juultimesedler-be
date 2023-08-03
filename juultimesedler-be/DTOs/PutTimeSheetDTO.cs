@@ -1,12 +1,10 @@
 ﻿using juultimesedler_be.Models;
-using System.Collections.Generic;
 
-namespace juultimesedler_be.DTOs
+namespace juultimesedler_be.DTOs;
+
+public class PutTimesheetDTO
 {
-    public class PutTimeSheetDTO
-    {
-        public int WorkerId { get; set; }
-        public int WeekNumber { get; set; }
-        public List<WorkDay>? Workdays { get; set; }
-    }
+    public int WorkerId { get; set; }
+    public int WeekNumber { get; set; }
+    public List<WorkDay>? Workdays { get; set; }
 }
