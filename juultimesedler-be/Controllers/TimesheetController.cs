@@ -20,12 +20,12 @@ namespace juultimesedler_be.Controllers
         {
             TimeService timeService = new();
             GetTimesheetWeekDTO timesheetWeek = timeService.GetCurrentTimesheetWeek();
-            
+
             return timesheetWeek;
         }
 
-        [HttpPut("api/timesheets")]
-        public async Task<PutTimeSheetDTO> UpsertTimesheet([FromBody] PutTimeSheetDTO weekTimesheet)
+        [HttpPut("api/puttimesheetweek")]
+        public async Task<PutTimesheetDTO> PutTimesheet([FromBody] PutTimesheetDTO weekTimesheet)
         {
             TimeService timeService = new();
             string formattedYearAndWeek = timeService.FormattedCurrentYearAndWeek();
