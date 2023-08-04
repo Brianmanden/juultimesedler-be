@@ -1,6 +1,3 @@
-using juultimesedler_be.Events;
-using Umbraco.Cms.Core.Notifications;
-
 namespace juultimesedler_be;
 
 public class Startup
