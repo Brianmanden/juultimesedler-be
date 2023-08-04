@@ -47,7 +47,6 @@ public class Startup
             .AddBackOffice()
             .AddWebsite()
             .AddComposers()
-            .AddNotificationHandler<UmbracoApplicationStartingNotification, ApplicationStartingNotificationHandler>()
             .Build();
     }
 
