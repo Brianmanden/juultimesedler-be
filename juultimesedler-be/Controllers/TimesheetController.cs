@@ -4,41 +4,40 @@ using juultimesedler_be.Services;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core.Services;
 
-namespace juultimesedler_be.Controllers
+namespace juultimesedler_be.Controllers;
+
+public class TimesheetController : Controller
 {
-    public class TimesheetController : Controller
+    private IContentService _contentService;
+
+    public TimesheetController(IContentService contentService)
     {
-        private IContentService _contentService;
+        _contentService = contentService;
+    }
 
-        public TimesheetController(IContentService contentService)
-        {
-            _contentService = contentService;
-        }
+    [HttpGet("api/gettimesheetweek")]
+    public async Task<GetTimesheetWeekDTO> GetCurrentTimesheetWeek()
+    {
+        TimeService timeService = new();
+        GetTimesheetWeekDTO timesheetWeek = timeService.GetCurrentTimesheetWeek();
 
-        [HttpGet("api/gettimesheetweek")]
-        public async Task<GetTimesheetWeekDTO> GetCurrentTimesheetWeek()
-        {
-            TimeService timeService = new();
-            GetTimesheetWeekDTO timesheetWeek = timeService.GetCurrentTimesheetWeek();
+        return timesheetWeek;
+    }
 
-            return timesheetWeek;
-        }
+    [HttpPut("api/puttimesheetweek")]
+    public async Task<PutTimesheetDTO> PutTimesheet([FromBody] PutTimesheetDTO weekTimesheet)
+    {
+        TimeService timeService = new();
+        string formattedYearAndWeek = timeService.FormattedCurrentYearAndWeek();
 
-        [HttpPut("api/puttimesheetweek")]
-        public async Task<PutTimesheetDTO> PutTimesheet([FromBody] PutTimesheetDTO weekTimesheet)
-        {
-            TimeService timeService = new();
-            string formattedYearAndWeek = timeService.FormattedCurrentYearAndWeek();
+        // TODO BJA - Check for workdays, maybe refactor into service ?
 
-            // TODO BJA - Check for workdays, maybe refactor into service ?
+        //var currentProject = _contentService.GetById(timesheet.SelectedProjectId);
+        ////currentProject.SetValue("fullName", "new fullname value");
+        //currentProject.SetValue("fullName", formattedYearAndWeek + " - new fullname value");
+        //currentProject.SetValue("address", "new address value");
 
-            //var currentProject = _contentService.GetById(timesheet.SelectedProjectId);
-            ////currentProject.SetValue("fullName", "new fullname value");
-            //currentProject.SetValue("fullName", formattedYearAndWeek + " - new fullname value");
-            //currentProject.SetValue("address", "new address value");
-
-            //_contentService.SaveAndPublish(currentProject);
-            return weekTimesheet;
-        }
+        //_contentService.SaveAndPublish(currentProject);
+        return weekTimesheet;
     }
 }

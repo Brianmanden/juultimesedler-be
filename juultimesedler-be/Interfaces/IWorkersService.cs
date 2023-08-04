@@ -1,7 +1,6 @@
-﻿namespace juultimesedler_be.Interfaces
+﻿namespace juultimesedler_be.Interfaces;
+
+public interface IWorkersService
 {
-    public interface IWorkersService
-    {
-        string GetWorkerKey(int workerId);
-    }
+    string GetWorkerKey(int workerId);
 }

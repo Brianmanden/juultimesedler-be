@@ -3,37 +3,36 @@ using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Web.Common;
 
-namespace juultimesedler_be.Controllers
+namespace juultimesedler_be.Controllers;
+
+public class ProjectController : Controller
 {
-    public class ProjectController : Controller
+    private readonly UmbracoHelper _umbracoHelper;
+
+    public ProjectController(UmbracoHelper umbracoHelper)
     {
-        private readonly UmbracoHelper _umbracoHelper;
+        _umbracoHelper = umbracoHelper;
+    }
+        
+    [HttpGet("api/projects/")]
+    public async Task<List<GetProjectDTO>> GetCurrentProjects()
+    {
+        IPublishedContent rootNode = _umbracoHelper.ContentAtRoot().FirstOrDefault();
+        IEnumerable<IPublishedContent> projects = rootNode.Children().DescendantsOrSelfOfType("project").ToList();
 
-        public ProjectController(UmbracoHelper umbracoHelper)
+        List<GetProjectDTO> allProjectsList = new();
+
+        foreach (var project in projects)
         {
-            _umbracoHelper = umbracoHelper;
-        }
-            
-        [HttpGet("api/projects/")]
-        public async Task<List<GetProjectDTO>> GetCurrentProjects()
-        {
-            IPublishedContent rootNode = _umbracoHelper.ContentAtRoot().FirstOrDefault();
-            IEnumerable<IPublishedContent> projects = rootNode.Children().DescendantsOrSelfOfType("project").ToList();
-
-            List<GetProjectDTO> allProjectsList = new();
-
-            foreach (var project in projects)
+            allProjectsList.Add(new GetProjectDTO
             {
-                allProjectsList.Add(new GetProjectDTO
-                {
-                    //someProperty = project.Value("contactPerson / address / description / contactPerson")?.ToString()
-                    ProjectId = project.Id,
-                    ProjectName = project.Name,
-                    ProjectFullName = project.Value("fullName")?.ToString(),
-                });
-            }
-
-            return allProjectsList;
+                //someProperty = project.Value("contactPerson / address / description / contactPerson")?.ToString()
+                ProjectId = project.Id,
+                ProjectName = project.Name,
+                ProjectFullName = project.Value("fullName")?.ToString(),
+            });
         }
+
+        return allProjectsList;
     }
 }

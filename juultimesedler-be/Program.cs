@@ -3,64 +3,63 @@ using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Web.Common.ApplicationBuilder;
 using juultimesedler_be.Interfaces;
 
-namespace juultimesedler_be
+namespace juultimesedler_be;
+
+public class Program
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-            => CreateHostBuilder(args)
-                .Build()
-                .Run();
+    public static void Main(string[] args)
+        => CreateHostBuilder(args)
+            .Build()
+            .Run();
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureServices(
-                    services =>
-                        services.AddScoped<IWorkersService, WorkersService>()
-                    )
-                .ConfigureUmbracoDefaults()
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.ConfigureServices(
-                        services => services.AddCors(
-                            options => options.AddPolicy(
-                                "MyCors", policy =>
-                                    {
-                                        policy
-                                        .AllowAnyOrigin()
-                                        .AllowAnyHeader()
-                                        .AllowAnyMethod();
-                                    }
-                            )
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureServices(
+                services =>
+                    services.AddScoped<IWorkersService, WorkersService>()
+                )
+            .ConfigureUmbracoDefaults()
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.ConfigureServices(
+                    services => services.AddCors(
+                        options => options.AddPolicy(
+                            "MyCors", policy =>
+                                {
+                                    policy
+                                    .AllowAnyOrigin()
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod();
+                                }
                         )
-                    );
-                    webBuilder.UseStaticWebAssets();
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
-
-    #region CORS
-    public class MyComposer : IComposer
-    {
-        public void Compose(IUmbracoBuilder builder)
-        {
-            builder.Services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    x =>    x.AllowAnyOrigin()
-                             .AllowAnyHeader()
-                             .AllowAnyMethod()
+                    )
                 );
+                webBuilder.UseStaticWebAssets();
+                webBuilder.UseStartup<Startup>();
             });
-
-            builder.Services.Configure<UmbracoPipelineOptions>(options =>
-            {
-                options.AddFilter(new UmbracoPipelineFilter(nameof(MyComposer))
-                {
-                    PostPipeline = appBuilder => appBuilder.UseCors()
-                });
-            });
-        }
-    }
-    #endregion
 }
+
+#region CORS
+public class MyComposer : IComposer
+{
+    public void Compose(IUmbracoBuilder builder)
+    {
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(
+                x =>    x.AllowAnyOrigin()
+                         .AllowAnyHeader()
+                         .AllowAnyMethod()
+            );
+        });
+
+        builder.Services.Configure<UmbracoPipelineOptions>(options =>
+        {
+            options.AddFilter(new UmbracoPipelineFilter(nameof(MyComposer))
+            {
+                PostPipeline = appBuilder => appBuilder.UseCors()
+            });
+        });
+    }
+}
+#endregion
