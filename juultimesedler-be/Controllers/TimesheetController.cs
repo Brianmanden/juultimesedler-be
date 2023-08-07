@@ -1,6 +1,5 @@
 ﻿using juultimesedler_be.DTOs;
 using juultimesedler_be.Interfaces;
-//using juultimesedler_be.Models;
 using juultimesedler_be.Services;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core.Services;
