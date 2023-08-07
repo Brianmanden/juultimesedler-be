@@ -31,7 +31,6 @@ public class TimesheetController : Controller
     [HttpGet("api/gettimesheetforweek/{WeekNumber}/{WorkerId}")]
     public async Task<GetTimesheetWeekDTO> GetTimesheetByWeekNumber(int WeekNumber, int WorkerId)
     {
-        var bp = "";
         GetTimesheetWeekDTO timesheet = _timesheetService.GetTimesheetByWeekNumber(WeekNumber, WorkerId);
         return timesheet;
     }
