@@ -1,4 +1,5 @@
 ﻿using juultimesedler_be.DTOs;
+using juultimesedler_be.Interfaces;
 //using juultimesedler_be.Models;
 using juultimesedler_be.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,19 +10,31 @@ namespace juultimesedler_be.Controllers;
 public class TimesheetController : Controller
 {
     private IContentService _contentService;
+    private ITimesheetService _timesheetService;
+    private ITimeService _timeService;
 
-    public TimesheetController(IContentService contentService)
+    public TimesheetController(IContentService _contentService, ITimesheetService timesheetService, ITimeService timeService)
     {
-        _contentService = contentService;
+        this._contentService = _contentService;
+        _timesheetService = timesheetService;
+        _timeService = timeService;
     }
 
-    [HttpGet("api/gettimesheetweek")]
-    public async Task<GetTimesheetWeekDTO> GetCurrentTimesheetWeek()
+    [HttpGet("api/gettimesheetcurrentweek/{WorkerId}")]
+    public async Task<GetTimesheetWeekDTO> GetCurrentTimesheetWeek(int WorkerId)
     {
         TimeService timeService = new();
-        GetTimesheetWeekDTO timesheetWeek = timeService.GetCurrentTimesheetWeek();
+        GetTimesheetWeekDTO timesheetWeek = _timesheetService.GetTimesheetForCurrentWeek(WorkerId);
 
         return timesheetWeek;
+    }
+
+    [HttpGet("api/gettimesheetforweek/{WeekNumber}/{WorkerId}")]
+    public async Task<GetTimesheetWeekDTO> GetTimesheetByWeekNumber(int WeekNumber, int WorkerId)
+    {
+        var bp = "";
+        GetTimesheetWeekDTO timesheet = _timesheetService.GetTimesheetByWeekNumber(WeekNumber, WorkerId);
+        return timesheet;
     }
 
     [HttpPut("api/puttimesheetweek")]

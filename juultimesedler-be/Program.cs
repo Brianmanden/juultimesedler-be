@@ -17,6 +17,8 @@ public class Program
             .ConfigureServices(
                 services =>
                     services.AddScoped<IWorkersService, WorkersService>()
+                            .AddScoped<ITimeService, TimeService>()
+                            .AddScoped<ITimesheetService, TimesheetService>()
                 )
             .ConfigureUmbracoDefaults()
             .ConfigureWebHostDefaults(webBuilder =>
@@ -47,7 +49,7 @@ public class MyComposer : IComposer
         builder.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(
-                x =>    x.AllowAnyOrigin()
+                x => x.AllowAnyOrigin()
                          .AllowAnyHeader()
                          .AllowAnyMethod()
             );
